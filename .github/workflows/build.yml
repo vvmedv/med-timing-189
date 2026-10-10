@@ -3,7 +3,8 @@ name: Build MED TIMING 1.8.9
 on:
 workflow_dispatch:
 push:
-branches: [main, master]
+branches:
+- main
 
 jobs:
 build:
@@ -19,25 +20,9 @@ steps:
       distribution: temurin
       java-version: '8'
 
-  - name: Set up Gradle
-    uses: gradle/actions/setup-gradle@v4
-    with:
-      gradle-version: '2.14.1'
-
   - name: Extract project
     run: unzip -o MED-TIMING-1.8.9-source.zip
 
   - name: Prepare Forge workspace
     working-directory: med_timing
-    run: gradle setupDecompWorkspace --no-daemon
-
-  - name: Build mod
-    working-directory: med_timing
-    run: gradle build --no-daemon
-
-  - name: Upload JAR
-    uses: actions/upload-artifact@v4
-    with:
-      name: MED-TIMING-1.8.9
-      path: med_timing/build/libs/*.jar
-      if-no-files-found: error
+    run: ./gradlew setupDecompWorkspace --no-daemon
